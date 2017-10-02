@@ -42,7 +42,7 @@ return $.connection.hub.start()
 ### Subscribe to Group
 
 ```javascript
-return ivrHubProxy.server.subscribe(groupName)
+return ivrHubProxy.server.subscribe("MyGroup")
     .then(function () {
         console.log('Subscribed.');
     })
@@ -52,10 +52,53 @@ return ivrHubProxy.server.subscribe(groupName)
 ### Unsubscribe from Group
 
 ```javascript
-return ivrHubProxy.server.unsubscribe(ash.id)
+return ivrHubProxy.server.unsubscribe("MyGroup")
     .then(function () { console.log('Unubscribed.') })
     .fail(function (err) { console.log('Could not Unsubscribe!', err); });
 ```
+
+
+## Send Message to Members of Group
+
+To simulate an IVR call message from outside of the hub to members of a given group (MyGroup above), you send an HTTP POST request to the server, as shown below.
+
+* **URL**
+
+  /call
+
+* **Method:**
+  
+  `POST`
+  
+  
+*  **URL Params**
+
+	_None_
+
+* **Data Params**
+
+  ```json
+  {
+    "Advisor": "CALLM031",          -- Advisor's HUB ID
+    "Phone": "1123121123",          -- Guest Phone
+    "SSN": "3865",                  -- Last 4 of Guest SSN
+    "MemberId": "617560765315",     -- Guest Membership ID
+    "ReservationID": "617560765315" -- Guest Reservation Number
+  }
+  ```
+  
+  _Note: Do not send both MemberId and ReservationId in a single request._
+
+* **Success Response:**
+  
+  * **Code:** 200 <br />
+    **Content:** _None_
+ 
+* **Error Response:**
+
+  * **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "Must include the advisor's Hub ID in the call details." }`
+  
 
 
 ## Questions/Comments
